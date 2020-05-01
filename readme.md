@@ -12,9 +12,9 @@ In your final commit you should check exactly two of these
 check-boxes to indicate which questions you have decided
 to answer:
 
-[ ] - Question 1
-[ ] - Question 2
-[ ] - Question 3
+- [ ] : Question 1
+- [ ] : Question 2
+- [ ] : Question 3
 
 If you do not tick enough boxes, or tick too many, then
 Q1 and Q2 will be marked by default.
@@ -24,8 +24,8 @@ you must select just two for assessment.
 
 Examples of ticked and un-ticked boxes:
 
-- [x] - Ticked (it doesn't matter which character you use)
-- [ ] - Un-ticked
+- [x] : Ticked (it doesn't matter which character you use)
+- [ ] : Un-ticked
 
 Errors in the Exam
 ==================
@@ -46,7 +46,7 @@ through to the last commit. You can start whenever you like within
 the exam period.
 
 The 8 hour time budget will not be enforced, and is merely a strong
-suggestion. During the period you are working on it you should
+suggestion. During the period you are actively working on it you should
 continue to push at regular intervals.
 
 Given the long time period during which the work can be started
@@ -61,7 +61,8 @@ to your shared repository at `elec40004-2019-exam-${TEAM}`,
 for whatever your value of ${TEAM} is. It should be of the form
 `${LOGIN1}_${LOGIN2}`.
 
-When this push is detected, you are considered to have started.
+When this push is detected, you are considered to have started
+and snapshots of your pushed repo will be taken at random intervals.
 
 From that point on you should only look at the spec in your
 private repository, and should ignore the globally visible spec.
@@ -89,12 +90,17 @@ testing. It is strongly recommended that you push to remote
 feature branches rather than merging and pushing to master,
 and merge to master only as you complete tasks.
 
+If you don't have any code to commit, then it is a good idea
+to push a text file recording what you were doing. This is
+also useful for your partner.
+
 Your commit history is your record of what you did and in
-what order - it would be considered... odd, if there was
+what order - it may be considered odd if there was
 no activity for four hours, and then suddenly a whole
 bunch of perfect code appeared at once. Your development
 history should be your actual history, including partially
-working code, or not-quite-compiling code.
+working code, not-quite-compiling code, test-code, script and
+test-case files.
 
 You may wish to take breaks during the day, which is fine.
 If you are breaking for an extended period (e.g. an hour
@@ -108,7 +114,7 @@ Submission
 Your final submission is whatever the last commit is
 on master at 10:00 on May 5th. Where there
 are inconsistencies in timing, the timing of observed
-pushes to github are used - we are well aware that github
+pushes to github are used - we are well aware that git
 timestamps can be faked.
 
 Backup submissions via hash can be made through blackboard.

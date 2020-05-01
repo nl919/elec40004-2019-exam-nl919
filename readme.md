@@ -3,13 +3,13 @@ ELEC40004 Final Exam
 
 Start: 10:00 May 4th
 Final deadline: 10:00 May 5th
-Intended length: 8 hours
+Intended length: 8 hours (inc. 1 hour lunch)
 
 Selected Questions
 ==================
 
 In your final commit you should check exactly two of these
-check-boxes to indicate which questions your have decided
+check-boxes to indicate which questions you have decided
 to answer:
 
 [ ] - Question 1
@@ -21,6 +21,11 @@ Q1 and Q2 will be marked by default.
 
 Note that you are welcome to try all three questions, but
 you must select just two for assessment.
+
+Examples of ticked and un-ticked boxes:
+
+- [x] - Ticked (it doesn't matter which character you use)
+- [ ] - Un-ticked
 
 Errors in the Exam
 ==================

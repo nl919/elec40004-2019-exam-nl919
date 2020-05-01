@@ -1,8 +1,16 @@
 ELEC40004 Final Exam
 ====================
 
+This is the repository where the final exam will appear,
+in sub-directories q1, q2, and q3.
+
+Schedule
+------
+
 Start: 10:00 May 4th
+
 Final deadline: 10:00 May 5th
+
 Intended length: 8 hours (inc. 1 hour lunch)
 
 Selected Questions
@@ -36,7 +44,7 @@ sensible, and consistent way. You should not ask other
 teams what their opinion is or try to build a group consensus.
 
 If you encounter any genuine bugs, document them in the file
-`erratta.md`, and include it in your submission.
+`errata.md`, and include it in your submission.
 
 Exam timing
 ===========
@@ -57,11 +65,13 @@ Initial clone and push
 ======================
 
 One of your team should clone this specification, and push it
-to your shared repository at `elec40004-2019-exam-${TEAM}`,
-for whatever your value of ${TEAM} is. It should be of the form
-`${LOGIN1}_${LOGIN2}`.
+to your shared repository at `elec40004-2019-exam-${TEAM}` at
+`https://github.com/ELEC40004/elec40004-2019-exam-${TEAM}`,
+for whatever your value of `${TEAM}` is. It should be of the form
+`${LOGIN1}_${LOGIN2}`, and only you and your partner have access
+to it.
 
-When this push is detected, you are considered to have started
+When this push is detected you are considered to have started,
 and snapshots of your pushed repo will be taken at random intervals.
 
 From that point on you should only look at the spec in your
@@ -112,10 +122,12 @@ Submission
 ==========
 
 Your final submission is whatever the last commit is
-on master at 10:00 on May 5th. Where there
-are inconsistencies in timing, the timing of observed
+on master at 10:00 on May 5th.
+
+Where there are inconsistencies in timing, the timing of observed
 pushes to github are used - we are well aware that git
-timestamps can be faked.
+timestamps in a repo can be faked in the local histories,
+but there is no way to fake the timing with respect to a pull.
 
 Backup submissions via hash can be made through blackboard.
 Note that this is only a temporary route to prove that you
@@ -211,8 +223,8 @@ Things that you explicitly can't do are:
 
 - You should not talk to people outside your team about the exam content, including
   coding, algorithms, debugging, suggestions on approaches, or anything else. While
-  you can talk to people during the exam period, including your team members, you
-  should avoid discussing the content of the exam.
+  you can talk to people during the exam period, potentially including other people
+  from other teams, you should avoid discussing the content of the exam. 
 
 - You should not use _active_ sources of information, such as posting new questions
   on stack-overflow, discussing things in forums, asking family members or seniors
@@ -240,8 +252,8 @@ activity would usually result in evidence of extended debugging activity,
 with tests being developed, and code being modified/changed. If a bug
 is suddenly fixed 1 hour before the deadline, but there has been no
 other activity for 8 hours, it might look odd and be queried - however,
-such patterns would **not** be considered evidence of cheating unless
-there were also patterns being noticed.
+such patterns would **not** be considered prima facie evidence of cheating unless
+there were also other patterns being noticed.
 
 The easiest way to avoid suspicion of any form of cheating is simply
 to commit and push your work in progress regularly, including partial code,
@@ -271,7 +283,7 @@ discussion about "is this an error" at the start of the exam
 is exactly the same as "does anyone know how we answer this
 question?".
 
-It there is a genuine error, then record it in the erratta, make
+It there is a genuine error, then record it in the errata, make
 some reasonable assumptions to get round it, and carry on.
 
 Can I check whether I've understood the question correctly?
@@ -374,14 +386,43 @@ If your partner is doing pretty much nothing, then that is a
 different matter. If people are given the chance to contribute,
 but choose not to, then there may be grounds for differential
 marking. However, this is exceptional, and would need to be
-dealt with on a case-by-case bases.
+dealt with on a case-by-case bases. Your git commit history is
+useful here to show who was doing what, though there is no
+automatic check to see how many commits each member performed.
+
+How can I be sure that the final submission is submitted
+--------------------------------------------------------
+
+The final submission is whatever is visible on your master
+branch in github in your private repo. To double-check the
+contents, two methods are:
+
+- Go to the github website, ensure you are looking at the
+  master branch, and check the hash. It should match your
+  local hash.
+
+- Perform a fresh clone of your repository from github and
+  check the hash. It is also worth compiling everything.
+
+From an assessment point of view, the way we will retrieve
+your submission is the equivalent of:
+```
+$ mkdir fresh-clone
+$ cd fresh-clone
+$ git clone https://github.com/ELEC40004/elec40004-2019-exam-${TEAM}.git
+$ cd elec40004-2019-exam-${TEAM}
+$ git checkout master
+```
+If you perform those steps (changing the value of ${TEAM}), then you
+are seeing exactly what we can see.
+
 
 I don't want to cheat, but I'm worried that...
 ------------------------------------------------------------
 
 ### ...people will read the spec for 8 hours, then start working
 
-Now that the 8 hour limit is a suggestion, then is not an
+Now that the 8 hour limit is a suggestion, this is not an
 issue. It would be pretty silly to pretend you were working for
 less time than you actually did. Much better just to start when
 you start, and if you want to take notes and try to understand
@@ -398,12 +439,12 @@ Unfortunately this is a possibility. However, sharing code
 is a risky activity, in many ways. You may be heartened
 to know that:
 
-1. The person who wrote the original code is liable plagiarism
+1. The person who wrote the original code is liable for plagiarism
 2. People who copy code tend to let others copy it again.
+3. People who _need_ to cheat are really bad at it.
 
 Often people think they are only sharing code amongst two
 teams, but then one of the teams shares with another team,
 and then that team shares with two others. Cheaters tend to chea^H^H^H
 share outside the original group, and the team that loses out most
 is the one that was actually capable of writing the code.
-

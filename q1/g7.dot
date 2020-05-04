@@ -1,0 +1,12 @@
+digraph G7 {
+    "f" -> "c" [label="L"];
+    "f" -> "g" [label="R"];
+
+    "c" -> "a" [label="L"];
+    "c" -> "d" [label="R"];
+
+    "g" -> "r" [label="L"];
+    "g" -> "x" [label="R"];
+
+    "x" -> "z" [label="R"];
+}

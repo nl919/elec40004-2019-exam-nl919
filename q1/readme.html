@@ -1,0 +1,175 @@
+<h1 id="q1---balancing-trees">Q1 - Balancing Trees</h1>
+<h1 id="background">Background</h1>
+<p>Binary sorted trees are relatively simple linked data-structures, but may become un-balanced, causing performance to degrade to that of a linked-list. One approach is to incrementally balance the tree while inserting and deleting each node, making each insertion and deletion more complicated and slightly slower. Another option is to completely reconstruct the tree once it becomes sufficiently imbalanced, creating a new tree that is either perfectly or approximately balanced. This means that some insertions and deletions may be much slower, while the typical insertion or deletion is simpler and slightly faster. This question explores the second option of occasionally reconstructing the tree.</p>
+<h2 id="tree-nodes">Tree nodes</h2>
+<p>The underlying data primitive used in this question is <code>tree_node</code>, which is defined in <code>tree_node.hpp</code></p>
+<pre><code>struct tree_node
+{
+    string value;
+    tree_node *left;
+    tree_node *right;
+};</code></pre>
+<p>This structure is a standard binary search tree, as seen in lectures.</p>
+<p>This particular tree only stores values, so it models a mathematical set, and each value should appear at most once in a set.</p>
+<h2 id="the-set-class">The <code>Set</code> class</h2>
+<p>The <code>StringSet</code> class in <code>string_set.hpp</code> provides a high-level interface for a set of strings. The main functions are:</p>
+<ul>
+<li><code>insert</code> : Add a new string to the underlying tree (if it doesn't already exist).</li>
+<li><code>contains</code> : Check whether the set contains a given string.</li>
+<li><code>optimise</code> : An optional method which tells implementations to spend time optimising the data structure for performance.</li>
+<li><code>root</code> : Returns a read-only view to the root of the tree underlying the set.</li>
+</ul>
+<p>Implementations of this class are created using the factory function <code>create_string_set</code>.</p>
+<h2 id="measuring-tree-balance">Measuring Tree balance</h2>
+<p>In a balanced binary tree containing <code>n</code> nodes the left and right sub-tree would contain around <code>(n-1)/2</code> nodes each. Applied recursively, this means the optimal height (number of levels) of a tree with <code>n</code> nodes is <code>ceiling(log2(n+1))</code>. In the worst case a completely unbalanced tree will degrade into a linked-list with height <code>n</code>.</p>
+<p>Given the nodes <code>n</code> and height <code>h</code> for a tree, a basic metric of balance is:</p>
+<pre><code>b = ( h / h_opt - 1 ) / ( n / h_opt - 1 ),
+    where h_opt = ceiling(log2(n+1))</code></pre>
+<p>This metric is 0 if the tree is perfectly balanced, and 1 if the tree is maximally unbalanced. For example, with <code>n=10</code> nodes we get <code>h_opt = 4</code>, and for different observed tree heights <code>h</code> we get:</p>
+<table>
+<thead>
+<tr class="header">
+<th>h</th>
+<th>b</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>3</td>
+<td>0.000</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>0.333</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>0.666</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>1.000</td>
+</tr>
+</tbody>
+</table>
+<h2 id="reconstructing-the-tree-in-place">Reconstructing the tree in-place</h2>
+<p>Given an existing binary search tree, we can reconstruct it simply by traversing the existing tree, while building a completely new tree alongside the original. The existing tree can then be freed using <code>delete</code>, and replaced with the new tree. However, this means that there will be many calls to <code>new</code>, plus we have to keep making copies of the node's value, both of which can be relatively expensive operations.</p>
+<p>Much more efficient is to keep all the nodes from the original tree, and reconstruct the tree &quot;in place&quot;, re-using the existing nodes but changing the links between them. This avoids re-allocating memory and copying the node values, and means that we only need to do cheap pointer manipulation.</p>
+<p>The tree re-balancing then follows these steps:</p>
+<ol style="list-style-type: decimal">
+<li>Create an empty working vector of pointers to tree nodes.</li>
+<li>Visit each node in the tree, and insert a pointer to each node into the working vector.</li>
+<li>Turn the nodes in the working vector into a new binary search tree, over-writing the existing left and right pointers.</li>
+<li>Return the new root node.</li>
+</ol>
+<p>The main choices come in steps 2. and 3. - how do we visit all the nodes in the tree, and how do we turn the vector back into a binary search tree?</p>
+<h2 id="node-visiting-and-collection">Node visiting and collection</h2>
+<p>One method of visiting and collecting the nodes in a tree is an in-order traversal, where we visit left children, then the node, then right children:</p>
+<pre><code>function collect_in_order(working_vec, node)
+begin
+   if empty(node) begin
+       return
+   end
+   collect_in_order( working_vec, left(node) )
+   working_vec.append( node )
+   collect_in_order( working_vec, right(node) )
+end</code></pre>
+<p>This assumes that <code>working_vec</code> is passed by reference, and so can be modified in place. Note that this is pseudo-code being used to describe an algorithm, and so will require adaptation to implement in C++.</p>
+<p>Visiting in-order ensures that all nodes are visited once. It also produces a vector where all the nodes appear in correct value order, because we insert everything in the left sub-tree before everything in the right sub-tree.</p>
+<h2 id="true-re-balancing">True re-balancing</h2>
+<p>An advantage of building a vector of nodes using in-order traversal is that the nodes in the vector will appear in the correct order. We can exploit this to build a balanced tree, as the root of the tree should ideally be the &quot;middle&quot; value in the set, with equal numbers of values which are smaller and larger. The middle value in the working vector will simply be the node half-way through the vector of in-order nodes. This approach can be applied recursively, balancing the left and sub-trees in the same way.</p>
+<p>Pseudo-code for this process is:</p>
+<pre><code>function build_balanced(node_vec, begin, end)
+begin
+    root = Empty
+    if begin &lt; end then
+        mid = (begin+end)/2
+        root = node_vec[mid]
+        set_left( root, build_balanced(node_vec, begin, mid) )
+        set_right( root, build_balanced(node_vec, mid+1, end) )
+    end if
+    return root
+end</code></pre>
+<h2 id="random-re-balancing">Random re-balancing</h2>
+<p>Another simple approach to turn the vector of nodes back into a tree is just to insert them back into the tree in a random order. This does not guarantee that the tree is balanced, but on average it is likely to be fairly well balanced, and is very unlikely to degrade into an extremely unbalanced tree.</p>
+<p>This re-balancing approach is fully implemented in <code>tree_rebuild_random</code>, which takes the original root node plus a random number generator object, re-builds the tree randomly, and returns a new root. This implementation is purely to give one example of rebalancing, and you do not need to change it.</p>
+<h2 id="visualising-graphs">Visualising graphs</h2>
+<p>It is often useful to visualise data-structures in order to understand the structure of the tree, and where specific values end up in the tree. (Graphviz)[https://graphviz.org/] is a set of tools for visualising linked data, and uses a very simple input format called <code>dot</code> to describe graphs. The following is a <code>dot</code> description of a binary search tree with 6 nodes containing the values <code>c</code>, <code>f</code>, <code>g</code>, <code>r</code>, <code>x</code>, <code>z</code>:</p>
+<pre><code>digraph G7 {
+    &quot;f&quot; -&gt; &quot;c&quot; [label=&quot;L&quot;];
+    &quot;f&quot; -&gt; &quot;g&quot; [label=&quot;R&quot;];
+    
+    &quot;c&quot; -&gt; &quot;a&quot; [label=&quot;L&quot;];
+    &quot;c&quot; -&gt; &quot;d&quot; [label=&quot;R&quot;];
+
+    &quot;g&quot; -&gt; &quot;r&quot; [label=&quot;L&quot;];    
+    &quot;g&quot; -&gt; &quot;x&quot; [label=&quot;R&quot;];
+
+    &quot;x&quot; -&gt; &quot;z&quot; [label=&quot;R&quot;];
+}</code></pre>
+<p>Each line of the form <code>&quot;A&quot; -&gt; &quot;B&quot;</code> establishes that there is a pointer from the node with value <code>A</code> to the node with value <code>B</code>. The attribute <code>[label=&quot;L&quot;]</code> indicates the pointer is for the left child, and <code>[label=&quot;R&quot;]</code> indicates it is the pointer for the left child. Null pointers do not appear the dot graph.</p>
+<p>This graph (also saved as <code>g7.dot</code>) can be converted to an image using the <code>dot</code> tool from graphviz:</p>
+<pre><code>$ sudo apt install graphviz    # Need to install graphviz tools the first time
+$ dot g7.dot -Tpng -o g7.png   # Convert to an image called g7.png
+$ cat g7.dot | dot -Tsvg &gt; g7.svg   # Convert to SVG using redirection</code></pre>
+<div class="figure">
+<img src="g7-ref.png" alt="g7-ref.png" />
+<p class="caption">g7-ref.png</p>
+</div>
+<p>Note that graphviz does not understand ordering among child levels, so it is possible that left and right children will be swapped. However, if the &quot;L&quot; and &quot;R&quot; edge-labels are attached, the structure can still be seen.</p>
+<h2 id="generating-unbalanced-trees">Generating unbalanced trees</h2>
+<p>Generating un-balanced trees can be useful for testing. The programme <code>generate_data.cpp</code> generates a set of strings which can vary from mostly balanced to very un-balanced. The program parameters are:</p>
+<ul>
+<li><code>n</code> : The number of nodes to generate (default 1000)</li>
+<li><code>balance</code> : A measure of balance, with 0 being completely unbalanced, and 1 being mostly balanced (default 0.25).</li>
+</ul>
+<h1 id="tasks">Tasks</h1>
+<h2 id="t1---statistics-25">T1 - Statistics (25%)</h2>
+<h3 id="t1.1---tree-height-7.5">T1.1 - Tree height (7.5%)</h3>
+<p>Complete the implementation of the function <code>tree_height</code>, which returns the height of a tree.</p>
+<h3 id="t1.2---tree-balance-7.5">T1.2 - Tree balance (7.5%)</h3>
+<p>Complete the implementation of the function <code>tree_balance</code>, so that it calculates the size and height of the tree, then returns the balance metric.</p>
+<p>You can make use of other functions, including those declared in <code>tree.hpp</code>, and/or functions you decide to create. If you do create any functions, they should appear in either <code>tree.cpp</code> or <code>tree.hpp</code>.</p>
+<h3 id="t1.3---create-test-inputs-10">T1.3 - Create test inputs (10%)</h3>
+<p>Create three text files containing 14 white-space separated strings. When inserted sequentially into a binary search tree (without balancing), these files should achieve the specified value of the balance metric <code>b</code>:</p>
+<ul>
+<li><code>tree_n_14_b_0.0.txt</code> : This should have <code>b=0.0</code>, so it is maximally balanced.</li>
+<li><code>tree_n_14_b_0.5.txt</code> : This should have <code>b=0.5</code>.</li>
+<li><code>tree_n_14_b_1.0.txt</code> : This should have <code>b=1.0</code>, so it is maximally un-balanced (i.e. a linked list).</li>
+</ul>
+<p><em>Hint: you may find it useful to sketch a 14 node tree with the required shape, then fill in the keys.</em></p>
+<h2 id="t2---visualisation-25">T2 - Visualisation (25%)</h2>
+<h3 id="t2.1---implement-render-tree-as-dot-15">T2.1 - Implement render tree as dot (15%)</h3>
+<p>The program <code>render_as_dot.cpp</code>:</p>
+<ol style="list-style-type: decimal">
+<li>Takes one argument specifying an instance of <code>StringSet</code>.</li>
+<li>Reads white-space separated strings from <code>stdin</code> and adds them to the set.</li>
+<li>Optimises the set.</li>
+<li>Prints the set's tree out as a <code>dot</code> file to <code>stdout</code>.</li>
+</ol>
+<p>Currently step 4 is incomplete.</p>
+<p>Complete the program <code>render_as_dot.cpp</code>, so that it renders all nodes and their links, using the format given earlier.</p>
+<p>Your program can assume that all input strings consist only of alphanumeric characters, with no embedded speech/quotation marks.</p>
+<p>The order your edges and nodes appear in the output file does not matter.</p>
+<h3 id="t2.2---create-visualisation-scripts-10">T2.2 - Create visualisation scripts (10%)</h3>
+<p>Create three scripts <code>visualise_no_balance.sh</code>, <code>visualise_random_balance.sh</code>, and <code>visualise_equal_balance.sh</code>.</p>
+<p>Each script should consume a stream of strings from <code>stdin</code>, and render the tree as an SVG to <code>stdout</code>. Internally the script should:</p>
+<ol style="list-style-type: decimal">
+<li>Use <code>render_as_dot</code> to build a tree.</li>
+<li>Use <code>dot</code> to render the output of <code>render_as_dot</code> as an SVG.</li>
+</ol>
+<p>Your scripts can assume that <code>./render_as_dot</code> has already been built, and that <code>dot</code> is installed in the system.</p>
+<h2 id="t3---balancing-routines-30">T3 - Balancing routines (30%)</h2>
+<h3 id="t3.1---implement-the-function-tree_collect_nodes_in_order-15">T3.1 - Implement the function <code>tree_collect_nodes_in_order</code> (15%)</h3>
+<p>Implement the function <code>tree_collect_nodes_in_order</code>, which should populate a vector pointing to all the nodes in the tree using in-order traversal.</p>
+<h3 id="t3.2---implement-the-function-tree_rebuild_balanced-15">T3.2 - Implement the function <code>tree_rebuild_balanced</code> (15%)</h3>
+<p>Implement the function <code>tree_rebuild_balanced</code>.</p>
+<p><em>Hint: You may wish to create recursive helper functions.</em></p>
+<h2 id="t4---sets-20">T4 - Sets (20%)</h2>
+<h3 id="t4.1---turn-unbalancedstringset-into-a-class-5">T4.1 - Turn <code>UnbalancedStringSet</code> into a class (5%))</h3>
+<p>Currently <code>UnbalancedStringSet</code> is a struct with all members public. Modify it so that it has public methods and non-public member variables.</p>
+<h3 id="t4.2---create-a-new-class-equalbalancestringset-10">T4.2 - Create a new class <code>EqualBalanceStringSet</code> (10%)</h3>
+<p>Create a new class called <code>EqualBalanceStringSet</code> in a header <code>equal_balance_string_set.hpp</code>, which uses <code>tree_rebuild_balanced</code> to optimise the tree.</p>
+<p>You can use any parts of the <code>unbalanced_string_set.hpp</code> or <code>random_balance_string_set.hpp</code> in your implementation.</p>
+<h3 id="t4.3---add-equalbalancestringset-to-create_string_set-5">T4.3 - Add <code>EqualBalanceStringSet</code> to <code>create_string_set</code> (5%)</h3>
+<p>Update the factory function <code>create_string_set</code> so that if the string <code>EqualBalanceStringSet</code> is given, it returns a new instance of <code>EqualBalanceStringSet</code>.</p>

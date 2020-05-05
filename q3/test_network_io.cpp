@@ -24,7 +24,7 @@ bool equivalent(const Network &ref, const Network &got)
     }
     return true;
 }
-
+/*
 int main()
 {
     int fail=0;
@@ -49,3 +49,4 @@ int main()
     }
     return fail;
 }
+*/

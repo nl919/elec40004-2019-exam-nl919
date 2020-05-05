@@ -17,5 +17,6 @@ int main()
 
     cin >> n;
 
-    print_parts(n);
+    auto canonical = canonicalise(n);
+    cout << canonical <<endl;
 }

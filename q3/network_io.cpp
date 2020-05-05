@@ -41,9 +41,22 @@ istream &operator>>(istream &src, Network &c)
 }
 
 
-ostream &operator<<(ostream &dst, const Network &c)
+ostream& operator<<(ostream& dst, const Network& c)
 {
-    // TODO
+    if (is_primitive(c))
+        dst << c.type << c.value;
+
+    else
+    {
+        dst << '(';
+        for (int i = 0; i < c.parts.size(); i++)
+        {
+            dst << c.parts[i];
+            if (i != c.parts.size() - 1)
+                dst << c.type;
+        }
+        dst << ')';
+    }
     return dst;
 }
 
@@ -52,7 +65,13 @@ vector<Network> create_test_networks()
     return {
         R(1),
         C(1),
-        L(1)
-        // TODO Make sure there are at least ten test-cases
+        L(1),
+        R(1) | L(2),
+        R(1) | L(2) | C(3),
+        R(1) & L(2) | C(3),
+        R(2) | (L(2) & C(1)),
+        (L(2) | C(1)) & R(2),
+        R(2) & (C(1) | C(2)) & L(3),
+        R(2) | (C(1) & C(2)) | L(3)
     };
 }

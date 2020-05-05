@@ -32,6 +32,7 @@ bool is_composite(const Network &a);
 
 bool operator==(const Network &a, const Network &b);
 
+bool operator<(const Network& a, const Network& b);
 
 istream &operator>>(istream &src, Network &c);
 ostream &operator<<(ostream &dst, const Network &c);
@@ -57,5 +58,9 @@ vector<Network> create_test_networks();
     standardised canonical form.
 */
 Network canonicalise(const Network &x);
+
+vector<Network> flatten(char type, vector<Network> parts);
+
+vector<Network> sort(vector<Network> parts);
 
 #endif

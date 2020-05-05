@@ -21,8 +21,8 @@ check-boxes to indicate which questions you have decided
 to answer:
 
 - [ ] : Question 1
-- [ ] : Question 2
-- [ ] : Question 3
+- [x] : Question 2
+- [x] : Question 3
 
 If you do not tick enough boxes, or tick too many, then
 Q1 and Q2 will be marked by default.

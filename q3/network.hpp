@@ -32,6 +32,7 @@ bool is_composite(const Network &a);
 
 bool operator==(const Network &a, const Network &b);
 
+bool operator<(const Network& a, const Network& b);
 
 istream &operator>>(istream &src, Network &c);
 ostream &operator<<(ostream &dst, const Network &c);

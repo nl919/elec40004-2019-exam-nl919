@@ -1,5 +1,5 @@
 #include "network.hpp"
-
+/*
 int main(int argc, char **argv)
 {
     float a=1;
@@ -26,3 +26,4 @@ int main(int argc, char **argv)
         cout<<omega[i]<<", "<<abs(H[i])<<", "<<arg(H[i])<<endl;
     }
 }
+*/

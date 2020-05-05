@@ -61,7 +61,13 @@ vector<Network> create_test_networks()
     return {
         R(1),
         C(1),
-        L(1)
-        // TODO Make sure there are at least ten test-cases
+        L(1),
+        R(1) | L(2),
+        R(1) | L(2) | C(3),
+        R(1) & L(2) | C(3),
+        R(2) | (L(2) & C(1)),
+        (L(2) | C(1)) & R(2),
+        R(2) & (C(1) | C(2)) & L(3),
+        R(2) | (C(1) & C(2)) | L(3)
     };
 }

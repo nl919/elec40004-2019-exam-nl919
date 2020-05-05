@@ -72,7 +72,61 @@ bool is_composite(const Network &a)
 }
 
 
-Network canonicalise(const Network &x)
+Network canonicalise(Network &x)
 {
-    // TODO
+    if (is_primitive(x))
+        return x;
+
+    auto parts = x.parts;
+    for (int i = 0; i < *x.parts.size; i++)
+        parts[i] = canonicalise(parts[i]);
+
+    parts = flatten(x);
+    parts = sort(x);
+
+    return x;
+}
+
+vector<Network> flatten(Network& network)
+{
+    vector<Network> result;
+    if (is_primitive(network))
+        return { network };
+
+    for (int i = 0; i < network.parts.size; i++)
+    {
+        auto subNetwork = network.parts[i];
+        if (is_composite(subNetwork) && subNetwork.type == network.type)
+        {
+            for (int i = 0; i < subNetwork.parts.size; i++)
+            {
+                if (is_primitive(subNetwork.parts[i]))
+                {
+                    network.parts.insert(network.parts.end, subNetwork.parts[i]);
+                    subNetwork.parts.
+                }
+                else
+                    flatten(subNetwork);
+            }
+        }
+    }
+}
+
+vector<Network> sort(Network& network)
+{
+    if (is_primitive(network))
+        return network.parts;
+
+    for (int i = network.parts.size - 1; i > 0; i--)
+        for (int j = i; j >= 0; i--)
+        {
+            if (network.parts[i] < network.parts[i - 1])
+            {
+                auto temp = network.parts[i];
+                network.parts[i] = network.parts[i - 1];
+                network.parts[i - 1] = temp;
+            }
+        }
+
+    return network.parts;
 }

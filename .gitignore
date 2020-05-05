@@ -2,6 +2,11 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+/q3
+################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
 /q3/.vs/Q3/v16
 /q3/Q3.vcxproj.user
 /q3/Q3.vcxproj.filters

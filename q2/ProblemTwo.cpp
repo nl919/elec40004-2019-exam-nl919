@@ -15,6 +15,25 @@ int main()
 	dims.push_back(3);
 	dims.push_back(4);
 
+	size_t total = volume(dims);
+	size_t i;
+	for (i = 0; i < total; i++)
+	{
+		vector<size_t> index = offset_to_index(dims, i);
+		cout << index[0] << " " << index[1] << " " << index[2] << endl;
+	}
+
+	return 0;
+}
+
+
+void debugShowNextIndex()
+{
+	vector<size_t> dims;
+	dims.push_back(2);
+	dims.push_back(3);
+	dims.push_back(4);
+
 	vector<size_t> index;
 	index.resize(3, 0);
 
@@ -23,8 +42,6 @@ int main()
 	{
 		cout << index[0] << " " << index[1] << " " << index[2] << endl;
 	}
-
-	return 0;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

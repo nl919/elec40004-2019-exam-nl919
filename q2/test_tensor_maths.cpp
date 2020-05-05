@@ -115,7 +115,7 @@ void mult_and_compare(Tensor *a, Tensor *b, Tensor *ref)
     delete ref;
 }
 
-int main22()
+int main()
 {
 
     cerr<<"Mini test of [2,2] broadcast ";
@@ -230,5 +230,5 @@ int main22()
 
     cerr<<"Ok"<<endl;
 
-    return 0;
+
 }

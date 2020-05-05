@@ -41,18 +41,22 @@ istream &operator>>(istream &src, Network &c)
 }
 
 
-ostream &operator<<(ostream &dst, const Network &c)
+ostream& operator<<(ostream& dst, const Network& c)
 {
     if (is_primitive(c))
         dst << c.type << c.value;
 
-    for (int i = 0; i < c.parts.size(); i++)
+    else
     {
-        dst << c.parts[i];
-        if (i != c.parts.size() - 1)
-            dst << c.type;
+        dst << '(';
+        for (int i = 0; i < c.parts.size(); i++)
+        {
+            dst << c.parts[i];
+            if (i != c.parts.size() - 1)
+                dst << c.type;
+        }
+        dst << ')';
     }
-
     return dst;
 }
 

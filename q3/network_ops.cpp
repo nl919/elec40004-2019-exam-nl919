@@ -33,9 +33,17 @@ Network operator&(const Network &a, const Network &b)
     return Network{'&', 0, {a,b} };
 }
 
-bool is_primitive(const Network &a)
+bool is_primitive(const Network& a)
 {
-    return false; // TODO
+    switch (a.type)
+    {
+    case 'R':
+    case 'L':
+    case 'C':
+        return true;
+    default:
+        return false;
+    }
 }
 
 bool is_composite(const Network &a)

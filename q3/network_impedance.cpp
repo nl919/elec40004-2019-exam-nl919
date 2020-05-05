@@ -1,15 +1,32 @@
 #include "network.hpp"
 
-complex<float> impedance(const Network &c, float omega)
+complex<float> impedance(const Network& c, float omega)
 {
-    if(c.type=='R'){
-        return {c.value, 0};
+    if (c.type == 'R')
+        return { c.value, 0 };
 
-    }else if(c.type=='C'){
-        return {0, -1/(omega*c.value) };
+    else if (c.type == 'C')
+        return { 0, -1 / (omega * c.value) };
 
-    }else{
-        assert(false);
+    else if (c.type == 'L')
+        return { 0, omega * c.value };
+
+    else if (c.type == '|')
+    {
+        complex<float> sum = { 0,0 };
+        for (int i = 0; i < c.parts.size; i++)
+            sum += impedance(c.parts[i], omega);
+
+        return sum;
+    }
+
+    else if (c.type == '|')
+    {
+        complex<float> sum = { 1,0 };
+        for (int i = 0; i < c.parts.size; i++)
+            sum += complex<float>(1, 0) / impedance(c.parts[i], omega);
+
+        return complex<float>(1, 0) / sum;
     }
 }
 

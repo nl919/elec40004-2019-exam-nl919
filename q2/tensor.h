@@ -11,10 +11,6 @@ using namespace std;
 
 class Tensor
 {
-protected:
-    vector<size_t> m_size;
-    vector<float> data;
-
 public:
     virtual ~Tensor()
     {}
@@ -51,22 +47,7 @@ public:
         Pre: 0<=index[i]<size[i], for all i
     */
     virtual void write(const vector<size_t> &i, float value) =0;
-
-    size_t order() const;
 };
-
-
-
-
-
-
-
-
-
-
-//--------------------Functions--------------------------
-
-
 
 /*  Returns the total number of elements contained in a tensor with the
     given dimensions. For example, if dims=[2,3,3], the volume is 2*3*3=18. */
@@ -77,8 +58,6 @@ bool is_scalar(const Tensor *x);
 
 // Return true if there is at most one non-unitary dimension
 bool is_vector(const Tensor *x);
-
-bool is_Matrix(const Tensor* x);
 
 /* Convert an index into a linear offset:
         offset == ((index[0]*size[0] + index[1])*size[1] + index[2]) * size[2] + ... index[n-1]

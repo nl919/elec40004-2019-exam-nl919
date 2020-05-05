@@ -71,7 +71,6 @@ bool is_composite(const Network &a)
     return !is_primitive(a);
 }
 
-
 Network canonicalise(Network &x)
 {
     if (is_primitive(x))
@@ -81,49 +80,54 @@ Network canonicalise(Network &x)
     for (int i = 0; i < x.parts.size(); i++)
         parts[i] = canonicalise(parts[i]);
 
-    parts = flatten(x);
-    parts = sort(x);
+    parts = flatten(x.type, parts);
+    parts = sort(parts);
 
-    return x;
+    return {x.type, x.value, parts};
 }
 
-vector<Network> flatten(Network& network)
+vector<Network> flatten(char type, vector<Network> parts)
 {
     vector<Network> result;
-    if (is_primitive(network))
-        return { network };
 
-    vector<Network> temp;
-    for (int i = 0; i < network.parts.size(); i++)
+    for (int i = 0; i < parts.size(); i++)
     {
-        auto subNetwork = network.parts[i];
+        if (is_primitive(parts[i]))
+            result.insert(result.end, parts[i]);
 
-        if (is_composite(subNetwork) && subNetwork.type == network.type)
-            temp.insert(temp.end(), subNetwork.parts.begin(), subNetwork.parts.end());
-    }
+        vector<Network> temp;
+        {
+            auto subNetwork = parts[i];
 
-    network.parts.insert(network.parts.end(), temp.begin(), temp.end());
-    for(vector<Network>::iterator itor = temp.begin(); itor != temp.end(); ++itor)
-    {
-        network.parts.erase(itor);
+            if (is_composite(subNetwork) && subNetwork.type == type)
+                temp.insert(temp.end(), subNetwork.parts.begin(), subNetwork.parts.end());
+        }
+
+        parts.insert(parts.end(), temp.begin(), temp.end());
+        for (vector<Network>::iterator itor = temp.begin(); itor != temp.end(); ++itor)
+        {
+            parts.erase(itor);
+        }
     }
+    
+    return result;
 }
 
-vector<Network> sort(Network& network)
+vector<Network> sort(vector<Network> parts)
 {
-    if (is_primitive(network))
-        return network.parts;
+    if (parts.size < 2 )
+        return parts;
 
-    for (int i = network.parts.size() - 1; i > 0; i--)
+    for (int i = parts.size() - 1; i > 0; i--)
         for (int j = i; j >= 0; i--)
         {
-            if (network.parts[i] < network.parts[i - 1])
+            if (parts[i] < parts[i - 1])
             {
-                auto temp = network.parts[i];
-                network.parts[i] = network.parts[i - 1];
-                network.parts[i - 1] = temp;
+                auto temp = parts[i];
+                parts[i] = parts[i - 1];
+                parts[i - 1] = temp;
             }
         }
 
-    return network.parts;
+    return parts;
 }

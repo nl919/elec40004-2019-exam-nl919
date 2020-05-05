@@ -78,6 +78,8 @@ bool is_scalar(const Tensor *x);
 // Return true if there is at most one non-unitary dimension
 bool is_vector(const Tensor *x);
 
+bool is_Matrix(const Tensor* x);
+
 /* Convert an index into a linear offset:
         offset == ((index[0]*size[0] + index[1])*size[1] + index[2]) * size[2] + ... index[n-1]
     If allow_broadcast is true, then non-zero indices into length-1 dimensions are allowed.

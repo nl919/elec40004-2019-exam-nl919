@@ -11,6 +11,10 @@ using namespace std;
 
 class Tensor
 {
+protected:
+    vector<size_t> m_size;
+    vector<float> data;
+
 public:
     virtual ~Tensor()
     {}
@@ -47,7 +51,22 @@ public:
         Pre: 0<=index[i]<size[i], for all i
     */
     virtual void write(const vector<size_t> &i, float value) =0;
+
+    size_t order() const;
 };
+
+
+
+
+
+
+
+
+
+
+//--------------------Functions--------------------------
+
+
 
 /*  Returns the total number of elements contained in a tensor with the
     given dimensions. For example, if dims=[2,3,3], the volume is 2*3*3=18. */

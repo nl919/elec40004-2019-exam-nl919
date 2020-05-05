@@ -4,6 +4,10 @@
 #include "matrix_tensor.hpp"
 
 
+
+
+
+
 bool is_scalar(const Tensor *x)
 {
     const vector<size_t> &d=x->size();
@@ -15,9 +19,18 @@ bool is_scalar(const Tensor *x)
     return true;
 }
 
-bool is_vector(const Tensor *x)
+bool is_vector(const Tensor* x)
 {
     // TODO
+    const vector<size_t>& d = x->size();
+    if (d.size() == 2)
+    {
+        if ((d[0] == 1 && d[1] > 1) || (d[0] > 1 && d[1] == 1))
+        {
+            return true;
+        }
+    }
+
     return false;
 }
 
@@ -58,13 +71,37 @@ size_t index_to_offset(const vector<size_t> &size, const vector<size_t> &index, 
     return offset;
 }
 
-
+//
 vector<size_t> offset_to_index(const vector<size_t> &size, int offset)
 {
-vector<size_t> res(size.size(), 0);
+    vector<size_t> res(size.size(), 0);
 
-    // TODO
+    // 2d case
+    if (size.size() == 2)
+    {
+        // How many rows befere
+        int i = offset / size[1];
+        int j = offset - i * size[1];
 
+        res[0] = i;
+        res[1] = j;
+    }
+
+    // 3d case
+    if (size.size() == 3)
+    {
+        int tier = size[1] * size[2];
+
+        int i = offset / tier;
+        int j = (offset - i * tier) / size[2];
+        int k = offset - i * tier - j * size[2];
+
+        res[0] = i;
+        res[1] = j;
+        res[2] = k;
+    }
+
+    // Other
     return res;
 }
 
@@ -100,4 +137,14 @@ Tensor *create_tensor(const std::vector<size_t> &size)
         // TODO
         assert(false);
     }
+}
+
+size_t Tensor::order() const
+{
+    return this->m_size.size();
+}
+
+size_t Tensor::volume() const
+{
+    return ::volume(this->m_size);
 }

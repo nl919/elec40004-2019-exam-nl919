@@ -8,7 +8,7 @@ class MatrixTensor
     : public Tensor
 {
 private:
-    vector<size_t> m_size;
+    // vector<size_t> m_size;
     vector<vector<float>> m_values;
 public:
     MatrixTensor(const vector<size_t> &_size)

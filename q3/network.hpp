@@ -59,4 +59,8 @@ vector<Network> create_test_networks();
 */
 Network canonicalise(const Network &x);
 
+vector<Network> flatten(Network& network);
+
+vector<Network> sort(Network& network);
+
 #endif

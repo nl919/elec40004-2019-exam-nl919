@@ -14,7 +14,7 @@ complex<float> impedance(const Network& c, float omega)
     else if (c.type == '|')
     {
         complex<float> sum = { 0,0 };
-        for (int i = 0; i < c.parts.size; i++)
+        for (int i = 0; i < c.parts.size(); i++)
             sum += impedance(c.parts[i], omega);
 
         return sum;
@@ -23,7 +23,7 @@ complex<float> impedance(const Network& c, float omega)
     else if (c.type == '|')
     {
         complex<float> sum = { 1,0 };
-        for (int i = 0; i < c.parts.size; i++)
+        for (int i = 0; i < c.parts.size(); i++)
             sum += complex<float>(1, 0) / impedance(c.parts[i], omega);
 
         return complex<float>(1, 0) / sum;
@@ -34,8 +34,8 @@ vector<complex<float>> transfer_function(const Network &v1, const Network &v2, c
 {
     vector<complex<float>> res;
 
-    for (int i = 0; i < omega.size; i++)
-        res.insert(res.begin,
+    for (int i = 0; i < omega.size(); i++)
+        res.insert(res.begin(),
             impedance(v2, omega[i]) / (impedance(v1, omega[i]) + impedance(v2, omega[i])));
 
     return res;

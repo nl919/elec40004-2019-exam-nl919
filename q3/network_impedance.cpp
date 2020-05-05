@@ -34,7 +34,9 @@ vector<complex<float>> transfer_function(const Network &v1, const Network &v2, c
 {
     vector<complex<float>> res;
 
-    // TODO
+    for (int i = 0; i < omega.size; i++)
+        res.insert(res.begin,
+            impedance(v2, omega[i]) / (impedance(v1, omega[i]) + impedance(v2, omega[i])));
 
     return res;
 }

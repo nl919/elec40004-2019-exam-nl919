@@ -43,9 +43,20 @@ vector<complex<float>> transfer_function(const Network &v1, const Network &v2, c
 
 vector<float> make_log10_space(float xLo, float xHi, int points)
 {
-    vector<float> res;
+    float begin = log10(xLo);
+    float end = log10(xHi);
+    float h = (end - begin) / (points - 1);
 
-    // TODO
+    vector<float> pts;
+    pts.push_back(xLo);
 
-    return res;
+    for (int i = 1; i < points - 1; i++)
+    {
+        float tmp = begin + i * h;
+        tmp = powf(10, tmp);
+        pts.push_back(tmp);
+    }
+
+    pts.push_back(xHi);
+    return pts;
 }
